@@ -1,0 +1,15 @@
+{
+  "name": "clubflow",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@10.33.0",
+  "scripts": {
+    "dev": "concurrently \"corepack pnpm --filter @clubflow/api dev\" \"corepack pnpm --filter @clubflow/web dev\"",
+    "build": "corepack pnpm --filter @clubflow/api build && corepack pnpm --filter @clubflow/web build",
+    "typecheck": "corepack pnpm --filter @clubflow/api typecheck && corepack pnpm --filter @clubflow/web typecheck",
+    "smoke": "node scripts/smoke-test.mjs"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
