@@ -1,5 +1,6 @@
 import type { Club } from "@clubflow/shared";
 import { useQuery } from "@tanstack/react-query";
+import { ArrowRight, BadgeCheck, Building2, ClipboardCheck, Users } from "lucide-react";
 import { useEffect, useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -28,6 +29,101 @@ const demoAccounts = [
 interface ClubsResponse {
   clubs: Club[];
 }
+
+const HeroWorkflow = ({ mode }: { mode: "login" | "signup" }) => {
+  const metrics =
+    mode === "login"
+      ? [
+          { label: "대기 요청", value: "12" },
+          { label: "활성 동아리", value: "8" },
+          { label: "공지", value: "24" },
+        ]
+      : [
+          { label: "입력", value: "01" },
+          { label: "검토", value: "02" },
+          { label: "배정", value: "03" },
+        ];
+
+  const steps =
+    mode === "login"
+      ? [
+          {
+            icon: ClipboardCheck,
+            title: "가입 승인",
+            description: "요청 확인",
+            status: "Admin",
+          },
+          {
+            icon: Building2,
+            title: "동아리 배정",
+            description: "소속 확정",
+            status: "Club",
+          },
+          {
+            icon: Users,
+            title: "역할 화면",
+            description: "멤버 · 리더 · 관리자",
+            status: "Role",
+          },
+        ]
+      : [
+          {
+            icon: Users,
+            title: "학생 정보",
+            description: "기본 프로필",
+            status: "Ready",
+          },
+          {
+            icon: Building2,
+            title: "희망 동아리",
+            description: "관심 분야 선택",
+            status: "Pick",
+          },
+          {
+            icon: BadgeCheck,
+            title: "운영진 검토",
+            description: "승인 후 자동 이동",
+            status: "Review",
+          },
+        ];
+
+  return (
+    <div aria-hidden="true" className="hero-visual">
+      <div className="workflow-panel">
+        <div className="workflow-panel__top">
+          <strong>{mode === "login" ? "오늘의 운영 흐름" : "가입 요청 단계"}</strong>
+          <span>ClubFlow</span>
+        </div>
+
+        <div className="workflow-metrics">
+          {metrics.map((metric) => (
+            <div className="workflow-metric" key={metric.label}>
+              <span>{metric.label}</span>
+              <strong>{metric.value}</strong>
+            </div>
+          ))}
+        </div>
+
+        <div className="workflow-timeline">
+          {steps.map((step) => {
+            const Icon = step.icon;
+
+            return (
+              <div className="workflow-step" key={step.title}>
+                <Icon size={18} strokeWidth={2.2} />
+                <div>
+                  <strong>{step.title}</strong>
+                  <p>{step.description}</p>
+                </div>
+                <span className="workflow-status">{step.status}</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export const LoginPage = () => {
   const navigate = useNavigate();
@@ -78,6 +174,8 @@ export const LoginPage = () => {
             <p>멤버, 리더, 관리자 화면이 서로 섞이지 않게 분리됩니다.</p>
           </article>
         </div>
+
+        <HeroWorkflow mode="login" />
       </section>
 
       <section className="auth-card">
@@ -103,7 +201,8 @@ export const LoginPage = () => {
           {errorMessage ? <p className="form-error">{errorMessage}</p> : null}
 
           <button className="primary-button" disabled={submitting} type="submit">
-            {submitting ? "로그인 중..." : "로그인"}
+            <span>{submitting ? "로그인 중..." : "로그인"}</span>
+            <ArrowRight size={16} />
           </button>
         </form>
 
@@ -208,6 +307,8 @@ export const SignupPage = () => {
             <p>왜 들어오고 싶은지 한 줄 요약이 아니라 제대로 적습니다.</p>
           </article>
         </div>
+
+        <HeroWorkflow mode="signup" />
       </section>
 
       <section className="auth-card auth-card--wide">
@@ -266,7 +367,8 @@ export const SignupPage = () => {
           {errorMessage ? <p className="form-error">{errorMessage}</p> : null}
 
           <button className="primary-button" disabled={submitting} type="submit">
-            {submitting ? "가입 요청 전송 중..." : "가입 요청 보내기"}
+            <span>{submitting ? "가입 요청 전송 중..." : "가입 요청 보내기"}</span>
+            <ArrowRight size={16} />
           </button>
         </form>
       </section>
