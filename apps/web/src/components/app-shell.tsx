@@ -1,5 +1,5 @@
 import type { SessionUser } from "@clubflow/shared";
-import { LogOut, PanelLeftClose } from "lucide-react";
+import { LogOut, ShieldCheck } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import type { PropsWithChildren } from "react";
 
@@ -28,7 +28,7 @@ export const AppShell = ({
             <span className="brand__mark">CF</span>
             <div>
               <strong>ClubFlow</strong>
-              <p>Club management workspace</p>
+              <p>동아리 운영 워크스페이스</p>
             </div>
           </div>
         </div>
@@ -74,8 +74,8 @@ export const AppShell = ({
 
           <div className="topbar__actions">
             <div className="topbar__indicator">
-              <PanelLeftClose size={16} />
-              <span>페이지를 나눠서 관리 흐름을 단순화했습니다.</span>
+              <ShieldCheck size={16} />
+              <span>세션 활성</span>
             </div>
             <button className="ghost-button" onClick={() => void logout()} type="button">
               <LogOut size={16} />
