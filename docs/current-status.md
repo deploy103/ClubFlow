@@ -2,20 +2,25 @@
 
 ## 날짜
 
-- 작업 기준일: 2026-04-17
+- 작업 기준일: 2026-06-09
 
 ## 현재 구현 상태
 
-ClubFlow는 현재 과제 플랫폼이 아니라, 다음 흐름의 동아리 운영 플랫폼으로 정리되어 있습니다.
+ClubFlow는 동아리 가입 요청부터 관리자 승인, 동아리 배정, 역할별 화면 진입까지 이어지는 동아리 운영 플랫폼입니다.
 
-- 로그인 화면 정리 완료
-- 회원가입 화면 추가 완료
-- 승인 대기 화면 추가 완료
-- 멤버 / 리더 / 관리자 화면 분리 완료
-- 관리자 가입 승인 / 반려 기능 추가 완료
-- 관리자 동아리 추가 기능 추가 완료
-- 리더 공지 등록 기능 추가 완료
-- 인메모리 저장소 기반 승인 플로우 구현 완료
+완료된 항목:
+
+- 로그인 / 회원가입 화면
+- 승인 대기 화면
+- 멤버 / 리더 / 관리자 화면 분리
+- 관리자 가입 승인 / 반려
+- 관리자 동아리 추가
+- 관리자 사용자 현황 조회
+- 리더 공지 등록
+- 인메모리 저장소 기반 승인 플로우
+- 세션 쿠키 인증
+- CSRF 보호
+- 운영툴 스타일 UI 정리
 
 ## 역할 구조
 
@@ -26,37 +31,44 @@ ClubFlow는 현재 과제 플랫폼이 아니라, 다음 흐름의 동아리 운
 
 ## 프론트엔드 상태
 
-- `apps/web` 에서만 화면 렌더링
-- 라우트:
+- 위치: `apps/web`
+- 기술 스택: React, Vite, TanStack Query, React Router, Lucide Icons
+- 주요 라우트:
   - `/login`
   - `/signup`
   - `/access`
   - `/member/*`
   - `/leader/*`
   - `/admin/*`
-- 메인 화면 복잡도를 줄이기 위해 역할별로 페이지를 나눴습니다.
+- 최근 정리:
+  - 로그인 / 회원가입 히어로에 워크플로우 시각 요소 추가
+  - 다크 사이드바 기반 앱 쉘 적용
+  - 카드, 표, 폼, 버튼 스타일 통일
+  - 모바일 반응형 레이아웃 보강
 
 ## 백엔드 상태
 
-- `apps/api` 에서만 API와 도메인 로직 처리
+- 위치: `apps/api`
+- 기술 스택: Fastify, TypeScript, Zod
 - 주요 API:
+  - `GET /api/health`
   - `POST /api/auth/signup`
   - `POST /api/auth/login`
+  - `GET /api/auth/me`
   - `GET /api/pending/overview`
   - `GET /api/member/*`
   - `GET/POST /api/leader/announcements`
   - `GET/POST /api/admin/*`
-- 세션 쿠키 + CSRF 보호 유지
 
 ## 검증 결과
 
-완료:
+최근 확인 완료:
 
-- `cd apps/api && ./node_modules/.bin/tsc --noEmit -p tsconfig.json`
-- `cd apps/web && ./node_modules/.bin/tsc --noEmit -p tsconfig.json`
-- `cd apps/api && ./node_modules/.bin/tsc -p tsconfig.json`
-- `cd apps/web && ./node_modules/.bin/vite build`
-- `node scripts/smoke-test.mjs`
+```bash
+corepack pnpm --filter @clubflow/web typecheck
+corepack pnpm --filter @clubflow/web build
+node scripts/smoke-test.mjs
+```
 
 스모크 테스트 확인 항목:
 
@@ -72,7 +84,14 @@ ClubFlow는 현재 과제 플랫폼이 아니라, 다음 흐름의 동아리 운
 - CSRF 보호
 - 로그아웃
 
+## 남은 작업
+
+- 영속 저장소 연결
+- 운영 배포 환경 구성
+- 운영용 `COOKIE_SECRET`, `WEB_ORIGIN`, HTTPS 쿠키 설정
+- 실제 사용자 데이터 관리 기능 확장
+
 ## 참고
 
 - 현재 저장소는 인메모리 기반이라 재시작 시 데이터가 초기화됩니다.
-- WSL 환경에서 빌드 검증을 위해 Linux용 `rollup` / `esbuild` 바이너리를 로컬 `node_modules`에 보강했습니다.
+- `.env` 없이도 기본값으로 로컬 실행이 가능합니다.
